@@ -142,12 +142,14 @@
     <ClCompile Include="MainFrame.cpp" />
     <ClCompile Include="Member.cpp" />
     <ClCompile Include="MyApp.cpp" />
+    <ClCompile Include="Source.cpp" />
     <ClCompile Include="Task.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainFrame.h" />
     <ClInclude Include="Member.h" />
     <ClInclude Include="MyApp.h" />
+    <ClInclude Include="Source.h" />
     <ClInclude Include="Task.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
