@@ -1,48 +1,67 @@
 #include "Task.h"
 #include <string>
 #include <vector>
+#include <iostream>
 #include <filesystem>
+#include <sstream>
 #include <fstream>
 #include <algorithm>
 
+Task::Task(const std::string& taskName, bool isForAdult, int taskPoints, int taskFrequency) :
+    taskName(taskName), isForAdult(isForAdult), taskPoints(taskPoints) , taskFrequency(taskFrequency) {}
 
-void saveTaskToFile(const std::vector<Task>& tasks, const std::string& fileName)
-{
-	std::ofstream ostream(fileName);
-	ostream << tasks.size();
+void Task::display() const {
+    std::cout << "Name: " << taskName
+        << ", Adult: " << (isForAdult ? "Yes" : "No")
+        << ", Points: " << taskPoints
+        << ", Frequency: " << taskFrequency
+        << std::endl;
+};
 
-	for (const Task& task : tasks) {
-		std::string description = task.taskDescription;
-		std::string name = task.taskName;
-		int points = task.taskPoints;
-		int frequency = task.taskFrequency;
-		bool adult = task.isForAdult;
-		std::replace(description.begin(), description.end(), ' ', '_');
-
-		ostream << '\n' << name << ' ' << description << ' ' << points << ' ' << frequency;
-	}
+void Task::SaveData(const std::vector<Task>& tasks) {
+    std::ofstream outFile("tasks.txt");
+    if (outFile.is_open()) {
+        for (const auto& task : tasks) {
+            outFile << task.taskName << ","
+                << task.isForAdult << ","
+                << task.taskPoints << ","
+				<< task.taskFrequency << "\n";
+        }
+        outFile.close();
+    }
+    else {
+        std::cerr << "Unable to open file for writing." << std::endl;
+    }
 }
 
-std::vector<Task> loadTasksFromFile(const std::string& fileName)
-{
-	if (!std::filesystem::exists(fileName)) {
-		return std::vector<Task>();
-	}
-	std::vector<Task> tasks;
-	std::ifstream istream(fileName);
+std::vector<Task> Task::LoadData() {
+    std::vector<Task> tasks;
+    std::ifstream inFile("tasks.txt");
+    std::string line;
 
-	int n;
-	istream >> n;
-	for (int i = 0; i < n; i++) {
-		std::string description;
-		std::string name;
-		int points;
-		int frequency;
-		bool adult;
-		istream >> name >> description >> points >> frequency >> adult;
-		std::replace(name.begin(), name.end(), '_', ' ');
-		tasks.push_back(Task{name, description, points, frequency});
-	}
+    if (inFile.is_open()) {
+        while (std::getline(inFile, line)) {
+            std::istringstream iss(line);
+            std::string taskName;
+            bool isForAdult;
+            int taskPoints;
+            int taskFrequency;
 
-	return tasks;
+            std::getline(iss, taskName, ',');
+            iss >> isForAdult;
+            iss.ignore(1); // Ignorování èárky
+            iss >> taskPoints;
+            iss.ignore(1); // Ignorování èárky
+            iss >> taskFrequency;
+
+
+            tasks.emplace_back(taskName, isForAdult, taskPoints,taskFrequency);
+        }
+        inFile.close();
+    }
+    else {
+        std::cerr << "Unable to open file for reading." << std::endl;
+    }
+
+    return tasks;
 }

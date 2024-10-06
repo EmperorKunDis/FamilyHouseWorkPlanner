@@ -2,12 +2,19 @@
 #include <string>
 #include <vector>
 
-struct Member
-{
-	std::string memberName;
-	bool isAdult;
-	std::vector<std::string> members;
+class Member {
+    public:
+        Member(const std::string& name, bool isAdult, int points, const std::string& id, const std::string& phoneNumber);
+        void display() const;
+        static void SaveData(const std::vector<Member>& members);
+        static std::vector<Member> LoadData();
+
+    private:
+        std::string name;
+        bool isAdult;
+        int points;
+        std::string id;
+        std::string phoneNumber;
 };
 
-void saveMembersToFile(const std::vector<Member>& Members, const std::string& fileMemberName);
-std::vector<Member> loadMembersFromFile(const std::string& fileMemberName);
+

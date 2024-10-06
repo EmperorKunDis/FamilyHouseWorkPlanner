@@ -1,13 +1,31 @@
 #pragma once
 #include <wx/wx.h>
+#include <vector>
+#include <string>
+
+#include "Task.h"	
+#include "Member.h"
 
 class MainFrame : public wxFrame
 {
 public:
 	MainFrame(const wxString& title);
+	void AddTaskFromInput();
+	void DelTaskFromList();
 
+	void AddMemberFromInput();
+	void DelMemberFromList();
+
+	std::vector<Task> tasks;
+	std::vector<Member> members; 
+
+	void loadMembersFromFile();
+	void loadTasksFromFile();
+
+	void saveMembersToFile();
+	void saveTasksToFile();
 private:
-	
+
 	void CreateControls();
 	void BindEventHandlers();
 
@@ -19,12 +37,6 @@ private:
 
 	void OnInputMemberEnter(wxCommandEvent& evt);
 	void OnInputTaskEnter(wxCommandEvent& evt);
-
-	void AddTaskFromInput();
-	void DelTaskFromList();
-
-	void AddMemberFromInput();
-	void DelMemberFromList();
 
 	void OnListKeyDown(wxKeyEvent& evt);
 
@@ -58,5 +70,7 @@ private:
 
 	void OnButtonClicked(wxCommandEvent& evt);
 	void OnKeyEvent(wxKeyEvent& evt);
+
+	
 };
 

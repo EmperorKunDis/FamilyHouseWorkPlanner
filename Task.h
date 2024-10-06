@@ -2,16 +2,16 @@
 #include <string>
 #include <vector>
 
-struct Task
+class Task
 {
-	std::string taskDescription;
+public:
+	Task(const std::string& taskName, bool isForAdult, int taskPoints, int taskFrequency);
+	void display() const;
+	static void SaveData(const std::vector<Task>& tasks);
+	static std::vector<Task> LoadData();
+private:
 	std::string taskName;
+	bool isForAdult; 
 	int taskPoints;
 	int taskFrequency;
-	bool isForAdult;
-	std::vector<std::string> subtasks;
-
 };
-
-void saveTaskToFile(const std::vector<Task>& tasks, const std::string& fileName);
-std::vector<Task> loadTasksFromFile(const std::string& fileName);

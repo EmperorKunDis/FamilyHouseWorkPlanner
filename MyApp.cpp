@@ -2,7 +2,7 @@
 #include <wx/wx.h>
 #include "MainFrame.h"
 
-IMPLEMENT_APP(MyApp);
+wxIMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit() {
 	MainFrame* mainFrame = new MainFrame("Family House Work Planner");
