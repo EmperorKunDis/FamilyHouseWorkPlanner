@@ -18,9 +18,16 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title) 
 	CreateStatusBar();
 
 	BindEventHandlers();
-	std::cout << "pojebany program " << std::endl;
+	
 	std::vector<Member> members = Member::LoadData();
 	std::vector<Task> tasks = Task::LoadData();
+for (const auto& member : members) {
+	listboxMembers->Insert(member.name, listboxMembers->GetCount());
+}
+
+for (const auto& task : tasks) {
+	listboxTasks->Insert(task.taskName, listboxTasks->GetCount());
+}
 
 }
 void delay(int seconds) {
@@ -131,17 +138,16 @@ void MainFrame::OnListKeyDown(wxKeyEvent& evt) {
 void MainFrame::AddMemberFromInput() { // Refere
 	wxString name = textFieldMember->GetValue();
 	bool isAdult = checkboxMembers->GetValue(); // Nastav
-
+	Member::SaveData(members);
 	// Ovìøení, zda je jméno prázdné
 	if (!name.IsEmpty()) {
-		std::cout << " Nasrat na hrad " << std::endl;
 		// Pøidání nového èlena s výchozími hodnotami pro ostatní atributy
 		members.emplace_back(name.ToStdString(), isAdult, 0, "", ""); // Zde jsou ostatní hodnoty prázdné
 
 		// Pøidání jména do seznamu
 		listboxMembers->Insert(name, listboxMembers->GetCount());
 
-		Member::SaveData(members);
+		
 
 		// Vyprázdnìní textového pole
 		textFieldMember->Clear();
@@ -149,11 +155,15 @@ void MainFrame::AddMemberFromInput() { // Refere
 }
 void MainFrame::DelMemberFromList()
 {
+	
 	int selectedIndex = listboxMembers->GetSelection(); // Getselected
+	Member::SaveData(members);
 	if (selectedIndex == wxNOT_FOUND) {
 		return; // Do no
 	}
 	listboxMembers->Delete(selectedIndex); // Delete the selected item
+	members.erase(members.begin() + selectedIndex);
+	
 }
 void MainFrame::AddTaskFromInput() {
 	wxString taskName = textFieldTask->GetValue();											// Get task name from the input field
@@ -161,18 +171,86 @@ void MainFrame::AddTaskFromInput() {
 	if (!taskName.IsEmpty()) {																// Create a Task object and populate its fields
 		tasks.emplace_back(taskName.ToStdString(), isForAdult, 0, 0);						// Insert the task into the listbox for GUI display
 		listboxTasks->Insert(taskName, listboxTasks->GetCount());
-																							// Add the task to the allTasks vector														// Clear the input field after adding
+		Task::SaveData(tasks);																			// Add the task to the allTasks vector														// Clear the input field after adding
 		textFieldTask->Clear();																// Save the tasks to file
 	}
 }
+
 void MainFrame::DelTaskFromList()
 {
 	int selectedIndex = listboxTasks->GetSelection(); // Get the selected task's index
 	if (selectedIndex == wxNOT_FOUND) {
 		return; // No task selected, do nothing
 	}
-
+	tasks.erase(tasks.begin() + selectedIndex);
+																			// Add the task to the allTasks vector														// Clear the input field after adding
 	// Remove the task from the listbox (GUI)
 	listboxTasks->Delete(selectedIndex);	
+	Task::SaveData(tasks);
 }
+
+
+void MainFrame::Properties() {
+
+	int selectedMember = listboxMembers->GetSelection();
+	int selectedTask = listboxTasks->GetSelection();
+
+	// Clear the properties list box
+	listboxProperties->Clear();
+
+	// Check if a member is selected
+	if (selectedMember >= 0)
+	{
+		// Display member properties
+		listboxProperties->Append("This member has name: ");
+		textFieldNameMember = new wxTextCtrl(this, wxID_ANY, members[selectedMember].name);
+		listboxProperties->Show(textFieldNameMember);
+
+		wxString adultStatus = members[selectedMember].isAdult ? "This member is Adult and can make hard work too" : "This member is not Adult or avalailibe";
+		listboxProperties->Append(adultStatus);
+		checkboxAdultMember = new wxCheckBox(this, wxID_ANY, "Is Adult?");
+		checkboxAdultMember->SetValue(members[selectedMember].isAdult);
+		listboxProperties->Show(checkboxAdultMember);
+
+		listboxProperties->Append("This member has points at start: ");
+		textFieldPointsMember = new wxTextCtrl(this, wxID_ANY, wxString::Format("%d", members[selectedMember].points));
+		listboxProperties->Show(textFieldPointsMember);
+
+		listboxProperties->Append(wxString::Format("Id of this member is: %d", members[selectedMember].id));
+		textFieldIdMember = new wxTextCtrl(this, wxID_ANY, wxString::Format("%d", members[selectedMember].id));
+		listboxProperties->Show(textFieldIdMember);
+
+		listboxProperties->Append("This member has a telephone number: ");
+		textFieldPhoneMember = new wxTextCtrl(this, wxID_ANY, members[selectedMember].phoneNumber);
+		listboxProperties->Show(textFieldPhoneMember);
+	}
+	// Check if a task is selected
+	else if (selectedTask >= 0)
+	{
+		// Display task properties
+		listboxProperties->Append("Task name: ");
+		textFieldNameTask = new wxTextCtrl(this, wxID_ANY, tasks[selectedTask].taskName);
+		listboxProperties->Show(textFieldNameTask);
+
+		listboxProperties->Append("Is this task for adults: ");
+		checkboxForAdultTask = new wxCheckBox(this, wxID_ANY, "Is for Adult");
+		checkboxForAdultTask->SetValue(tasks[selectedTask].isForAdult);
+		listboxProperties->Show(checkboxForAdultTask);
+
+		listboxProperties->Append("Task points: ");
+		wxArrayString pointChoices;
+		for (int i = 1; i <= 5; ++i)
+		{
+			pointChoices.Add(wxString::Format("%d", i));
+		}
+		comboBoxPointsTask = new wxComboBox(this, wxID_ANY, wxString::Format("%d", tasks[selectedTask].taskPoints), wxDefaultPosition, wxDefaultSize, pointChoices);
+		listboxProperties->Show(comboBoxPointsTask);
+
+		listboxProperties->Append("Task frequency: ");
+		wxArrayString frequencyChoices = { "One time daily", "One time weekly", "Two times weekly", "Three times weekly", "One time monthly", "Two times monthly" };
+		comboBoxFrequencyTask = new wxComboBox(this, wxID_ANY,wxEmptyString, wxDefaultPosition, wxDefaultSize, frequencyChoices);
+		listboxProperties->Show(comboBoxFrequencyTask);
+	}
+}
+
 

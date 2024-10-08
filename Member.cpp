@@ -19,8 +19,7 @@ void Member::display() const {
         << std::endl;
 };
 
-void Member::SaveData(const std::vector<Member>& members) {
-    std::cout << members[0].name << members[0].isAdult << members[0].points << members[0].id << members[0].phoneNumber << std::endl;
+void Member::SaveData(const std::vector<Member>& members) {    
     std::ofstream outFile("members.txt");
     if (outFile.is_open()) {
         for (const auto& member : members) {

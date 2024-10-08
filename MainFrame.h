@@ -19,11 +19,7 @@ public:
 	std::vector<Task> tasks;
 	std::vector<Member> members; 
 
-	void loadMembersFromFile();
-	void loadTasksFromFile();
-
-	void saveMembersToFile();
-	void saveTasksToFile();
+	void Properties();
 private:
 
 	void CreateControls();
@@ -67,6 +63,27 @@ private:
 	wxStaticText* textStatic3;
 	wxListBox* listboxProperties;
 	wxButton* btn5;
+
+
+	wxStaticText* textStaticNameMember;
+	wxTextCtrl* textFieldNameMember;
+	wxStaticText* textStaticAdultMember;
+	wxCheckBox* checkboxAdultMember;
+	wxStaticText* textStaticPointsMember;
+	wxTextCtrl* textFieldPointsMember;
+	wxStaticText* textStaticIdMember;
+	wxTextCtrl* textFieldIdMember;
+	wxStaticText* textStaticPhoneMember;
+	wxTextCtrl* textFieldPhoneMember;
+
+	wxStaticText* textStaticNameTask;
+	wxTextCtrl* textFieldNameTask;
+	wxStaticText* textStaticForAdultTask;
+	wxCheckBox* checkboxForAdultTask;
+	wxStaticText* textStaticPointsTask;
+	wxComboBox* comboBoxPointsTask;
+	wxStaticText* textStaticFrequencyTask;
+	wxComboBox* comboBoxFrequencyTask;
 
 	void OnButtonClicked(wxCommandEvent& evt);
 	void OnKeyEvent(wxKeyEvent& evt);
