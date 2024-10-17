@@ -18,7 +18,7 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title)	
 
 void delay(int seconds) {
 	std::this_thread::sleep_for(std::chrono::seconds(seconds));
-	wxLogStatus("Created by: Martin Švanda						P.S.: Im looking for job so please write me to martin.k.svanda@gmail.com"); // Log the status
+	wxLogStatus("Created by: Martin ï¿½vanda						P.S.: Im looking for job so please write me to martin.k.svanda@gmail.com"); // Log the status
 }
 
 void MainFrame::OnKeyEvent(wxKeyEvent& evt) {
@@ -141,7 +141,7 @@ void MainFrame::AddMemberFromInput() {
 	wxString name = textFieldMember->GetValue();
 
 	if (!name.IsEmpty()) {
-	listboxMembers->Insert( name, listboxMembers->GetCount());
+	listboxMembers->Insert( name, listboxMembers->GetTopItem());
 	textFieldMember->Clear();// Insert the escription
 	}
 }
